@@ -31,6 +31,10 @@
 #import "ASIFormDataRequest.h"
 #import "JSONKit.h"
 
+extern NSString * const gTransloaditKey;
+extern NSString * const gTransloaditSecret;
+extern NSString * const gTransloaditTemplateId;
+
 @interface TransloaditRequest : ASIFormDataRequest 
 {
 	NSString *secret;

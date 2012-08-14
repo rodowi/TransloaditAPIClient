@@ -1,5 +1,4 @@
 #import "IphoneSdkViewController.h"
-#import "Config.h"
 
 @implementation IphoneSdkViewController
 
@@ -56,8 +55,8 @@
 
 	status.text = NSLocalizedString(@"preparing upload", @"");	
 
-	transload = [[TransloaditRequest alloc] initWithCredentials:TransloaditKey secret:TransloaditSecret];
-	[transload setTemplateId:TransloaditTemplateId];
+	transload = [[TransloaditRequest alloc] initWithCredentials:gTransloaditKey secret:gTransloaditSecret];
+	[transload setTemplateId:gTransloaditTemplateId];
 	[transload addPickedFile:info];
 	[transload setNumberOfTimesToRetryOnTimeout:5];
 	[transload setDelegate:self];
@@ -246,9 +245,9 @@
 {
 	[button setTitle:NSLocalizedString(@"Select File", @"") forState:UIControlStateNormal];
 
-	if ([TransloaditKey length] == 0 || [TransloaditSecret length] == 0 || [TransloaditTemplateId length] == 0) 
+	if ([gTransloaditKey length] == 0 || [gTransloaditSecret length] == 0 || [gTransloaditTemplateId length] == 0) 
     {
-		UIAlertView *error = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Bad config", @"") message:NSLocalizedString(@"Please edit the Config.h file and insert your transloadit credentials.", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"Ok", @"") otherButtonTitles:nil];
+		UIAlertView *error = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Bad config", @"") message:NSLocalizedString(@"Missing Transloadit API credentials, add 'em to TransloaditRequest.m", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"Ok", @"") otherButtonTitles:nil];
 		[error show];
 		[error release];
 	}

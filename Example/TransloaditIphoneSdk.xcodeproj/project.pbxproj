@@ -28,7 +28,6 @@
 		DC70063911F1DE75005D6D1C /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = DC70063811F1DE75005D6D1C /* icon.png */; };
 		DC70065711F1DF59005D6D1C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = DC70065611F1DF59005D6D1C /* Default.png */; };
 		DCCDA78511F31BCA001602BB /* TransloaditRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DCCDA78411F31BCA001602BB /* TransloaditRequest.m */; };
-		DCCDA79C11F3240F001602BB /* Config.m in Sources */ = {isa = PBXBuildFile; fileRef = DCCDA79B11F3240F001602BB /* Config.m */; };
 		DCF0A57A11EFAAC900EDFA28 /* logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = DCF0A57911EFAAC900EDFA28 /* logo.jpg */; };
 		DCF0A79211EFD13E00EDFA28 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF0A79111EFD13E00EDFA28 /* Reachability.m */; };
 		DCF0A79A11EFD16600EDFA28 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCF0A79911EFD16600EDFA28 /* CFNetwork.framework */; };
@@ -77,8 +76,6 @@
 		DC70065611F1DF59005D6D1C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		DCCDA78311F31BCA001602BB /* TransloaditRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TransloaditRequest.h; path = ../../TransloaditSDK/TransloaditRequest.h; sourceTree = "<group>"; };
 		DCCDA78411F31BCA001602BB /* TransloaditRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransloaditRequest.m; path = ../../TransloaditSDK/TransloaditRequest.m; sourceTree = "<group>"; };
-		DCCDA79A11F3240F001602BB /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
-		DCCDA79B11F3240F001602BB /* Config.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Config.m; sourceTree = "<group>"; };
 		DCF0A57911EFAAC900EDFA28 /* logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = logo.jpg; sourceTree = "<group>"; };
 		DCF0A79011EFD13E00EDFA28 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = ../../TransloaditSDK/Reachability/Reachability.h; sourceTree = "<group>"; };
 		DCF0A79111EFD13E00EDFA28 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = ../../TransloaditSDK/Reachability/Reachability.m; sourceTree = "<group>"; };
@@ -141,8 +138,6 @@
 		29B97315FDCFA39411CA2CEA /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				DCCDA79A11F3240F001602BB /* Config.h */,
-				DCCDA79B11F3240F001602BB /* Config.m */,
 				1D3623240D0F684500981E51 /* IphoneSdkAppDelegate.h */,
 				1D3623250D0F684500981E51 /* IphoneSdkAppDelegate.m */,
 				28D7ACF60DDB3853001CB0EB /* IphoneSdkViewController.h */,
@@ -296,7 +291,6 @@
 				28D7ACF80DDB3853001CB0EB /* IphoneSdkViewController.m in Sources */,
 				DCF0A79211EFD13E00EDFA28 /* Reachability.m in Sources */,
 				DCCDA78511F31BCA001602BB /* TransloaditRequest.m in Sources */,
-				DCCDA79C11F3240F001602BB /* Config.m in Sources */,
 				C31BC41A151E61F800F7AEB0 /* ASIAuthenticationDialog.m in Sources */,
 				C31BC41B151E61F800F7AEB0 /* ASIDataCompressor.m in Sources */,
 				C31BC41C151E61F800F7AEB0 /* ASIDataDecompressor.m in Sources */,

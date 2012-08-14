@@ -1,5 +1,9 @@
 #import "TransloaditRequest.h"
 
+NSString * const gTransloaditKey = @"";
+NSString * const gTransloaditSecret = @"";
+NSString * const gTransloaditTemplateId = @"";
+
 @implementation TransloaditRequest
 @synthesize params, response;
 
