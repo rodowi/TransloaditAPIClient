@@ -1,10 +1,11 @@
 #import "IphoneSdkViewController.h"
+#import "TransloaditAPIClient.h"
 
 @implementation IphoneSdkViewController
 
 @synthesize button, thumb, progressBar, spinner, status;
 
-#pragma mark helpers
+#pragma mark Helpers
 
 - (void)setThumbnail:(UIImagePickerController *)picker info:(NSDictionary *)info
 {
@@ -48,6 +49,8 @@
 	[pool release];
 }
 
+#pragma mark Networking
+
 - (void)startUpload:(NSDictionary *)info
 {
 	spinner.hidden = YES;
@@ -55,46 +58,44 @@
 
 	status.text = NSLocalizedString(@"preparing upload", @"");	
 
-	transload = [[TransloaditRequest alloc] initWithCredentials:gTransloaditKey secret:gTransloaditSecret];
-	[transload setTemplateId:gTransloaditTemplateId];
-	[transload addPickedFile:info];
-	[transload setNumberOfTimesToRetryOnTimeout:5];
-	[transload setDelegate:self];
-	[transload setUploadProgressDelegate:self];
-	[transload startAsynchronous];
+    [[TransloaditAPIClient sharedClient] setUploadProgressBlock:^(NSInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+        NSLog(@"Sent %lld of %lld bytes", totalBytesWritten, totalBytesExpectedToWrite);
+        status.text = NSLocalizedString(@"uploading file", @"");
+        [progressBar setProgress:(totalBytesWritten / totalBytesExpectedToWrite)];
+        if (totalBytesWritten == totalBytesExpectedToWrite) {
+            NSLog(@"We are done uploading!");
+        }
+    }];
+    
+    [[TransloaditAPIClient sharedClient] setCompletionBlockWithSuccess:^(NSDictionary *JSON) {
+        [self requestFinished:JSON];
+    } failure:^(NSError *error) {
+        NSLog(@"Awww snap! Failed with error '%@'", [error localizedDescription]);
+    }];
+
+    [[TransloaditAPIClient sharedClient] uploadFileFromPicker:info];
 }
 
-- (void)requestFinished:(TransloaditRequest *)transloadRequest
+- (void)requestFinished:(NSDictionary *)response
 {
 	status.hidden = progressBar.hidden = YES;
 	[button setTitle:NSLocalizedString(@"Select File", @"") forState:UIControlStateNormal];
+    
+    NSString *responseStatus;
+    NSString *errorDescription = [response valueForKeyPath:@"error"];
+    if (errorDescription) {
+        responseStatus = errorDescription;
+    } else {
+        responseStatus = [response valueForKeyPath:@"ok"];
+    }
 
-	NSString *responseStatus;
-	if ([transloadRequest hadError]) 
-    {
-		responseStatus = [[transloadRequest response] objectForKey:@"error"];
-	} 
-    else 
-    {
-		responseStatus = [[transloadRequest response] objectForKey:@"ok"];
-	}
-
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:responseStatus message:[transloadRequest responseString] delegate:nil cancelButtonTitle:NSLocalizedString(@"Ok", @"") otherButtonTitles:nil];
-
+    UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:responseStatus message:[response description] delegate:nil cancelButtonTitle:NSLocalizedString(@"Ok", @"") otherButtonTitles:nil] autorelease];
 	[alert show];
-	[alert release];
-	[transload release];
-	transload = nil;
-	
-	// hack to align text on the left
-	((UILabel *)[[alert subviews] objectAtIndex:1]).textAlignment = UITextAlignmentLeft;
+
+    ((UILabel *)[[alert subviews] objectAtIndex:1]).textAlignment = UITextAlignmentLeft;
 }
 
-- (void)setProgress:(float)currentProgress
-{
-	status.text = NSLocalizedString(@"uploading file", @"");	
-	[progressBar setProgress:currentProgress];
-}
+#pragma mark Image processing
 
 // see: http://stackoverflow.com/questions/1282830/uiimagepickercontroller-uiimage-memory-and-more
 + (UIImage*)imageWithImage:(UIImage*)sourceImage scaledToSizeWithSameAspectRatio:(CGSize)targetSize;
@@ -201,6 +202,8 @@
     return newImage; 
 }
 
+#pragma mark Image picker controller
+
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
 	spinner.hidden = status.hidden = NO;
@@ -216,10 +219,11 @@
 	[picker release];
 }
 
-#pragma mark actions
+#pragma mark Actions
 
 - (IBAction)buttonTouch
 {
+    /*
 	if (transload) 
     {
 		[transload cancel];
@@ -231,26 +235,30 @@
 		[spinner stopAnimating];
 		return;
 	}
+     */
 
-	// Pops up the image picker showing al available images and videos
-	thumb.hidden = YES;
+	thumb.hidden = YES;    
+
+	// Pops up the image picker showing all available images and videos
 	UIImagePickerController *picker = [[UIImagePickerController alloc] init];
 	picker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
 	picker.delegate = self;
 	[self presentModalViewController:picker animated:YES];
 }
 
-#pragma mark controller
+#pragma mark Controller
+
 - (void) viewDidLoad
 {
+    [[TransloaditAPIClient sharedClient] authenticateWithKey:@"<AUTH-KEY>" andSecret:@"<AUTH-SECRET>"];
+    [[TransloaditAPIClient sharedClient] setTemplateId:@"<TEMPLATE-ID>"];
+    
 	[button setTitle:NSLocalizedString(@"Select File", @"") forState:UIControlStateNormal];
 
-	if ([gTransloaditKey length] == 0 || [gTransloaditSecret length] == 0 || [gTransloaditTemplateId length] == 0) 
-    {
-		UIAlertView *error = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Bad config", @"") message:NSLocalizedString(@"Missing Transloadit API credentials, add 'em to TransloaditRequest.m", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"Ok", @"") otherButtonTitles:nil];
-		[error show];
-		[error release];
-	}
+    if ([[TransloaditAPIClient sharedClient] allKeysAreSet] == NO) {
+		UIAlertView *errorAlertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Bad config", @"") message:NSLocalizedString(@"Missing Transloadit API credentials, don't forget to invoke authenticateWithKey:andSecret", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"Ok", @"") otherButtonTitles:nil] autorelease];
+		[errorAlertView show];
+    }
 }
 
 - (void) dealloc
