@@ -241,7 +241,10 @@
 {
     [[TransloaditAPIClient sharedClient] authenticateWithKey:@"<AUTH-KEY>" andSecret:@"<AUTH-SECRET>"];
     [[TransloaditAPIClient sharedClient] setTemplateId:@"<TEMPLATE-ID>"];
-    
+    [[TransloaditAPIClient sharedClient] setRedirectUrl:@"<REDIRECT-URL>"];
+    NSDictionary *fields = [NSDictionary dictionaryWithObjectsAndKeys:@"my value", @"message", nil];
+    [[TransloaditAPIClient sharedClient] setFields:fields];
+
 	[button setTitle:NSLocalizedString(@"Select File", @"") forState:UIControlStateNormal];
 
     if ([[TransloaditAPIClient sharedClient] allKeysAreSet] == NO) {
