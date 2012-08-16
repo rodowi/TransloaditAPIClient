@@ -45,9 +45,9 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
     [_uploadProgressBlock release];
     [_failureBlock release];
     [_successBlock release];
-    
+
     [params release];
-    
+
     [super dealloc];
 }
 
@@ -95,6 +95,16 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
 - (void)setTemplateId:(NSString *)identifier
 {
     [params setObject:identifier forKey:@"template_id"];
+}
+
+- (void)setRedirectUrl:(NSString *)redirectUrl
+{
+    [params setObject:redirectUrl forKey:@"redirect_url"];
+}
+
+- (void)setFields:(NSDictionary *)fields
+{
+    [params setObject:fields forKey:@"fields"];
 }
 
 - (BOOL)allKeysAreSet
