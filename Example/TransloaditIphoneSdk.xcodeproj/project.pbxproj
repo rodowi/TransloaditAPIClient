@@ -36,6 +36,7 @@
 		DC1D928015DAFAE900B8F886 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = DC1D927515DAFAE900B8F886 /* AFXMLRequestOperation.m */; };
 		DC1D928115DAFAE900B8F886 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = DC1D927715DAFAE900B8F886 /* UIImageView+AFNetworking.m */; };
 		DC1D928415DAFBCB00B8F886 /* TransloaditAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = DC1D928315DAFBCB00B8F886 /* TransloaditAPIClient.m */; };
+		DC1D92AB15DD627700B8F886 /* TransloaditAPIRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DC1D92AA15DD627700B8F886 /* TransloaditAPIRequest.m */; };
 		DC70063911F1DE75005D6D1C /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = DC70063811F1DE75005D6D1C /* icon.png */; };
 		DC70065711F1DF59005D6D1C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = DC70065611F1DF59005D6D1C /* Default.png */; };
 		DCCDA78511F31BCA001602BB /* TransloaditRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DCCDA78411F31BCA001602BB /* TransloaditRequest.m */; };
@@ -106,6 +107,8 @@
 		DC1D927715DAFAE900B8F886 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
 		DC1D928215DAFBCB00B8F886 /* TransloaditAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TransloaditAPIClient.h; path = ../../TransloaditSDK/TransloaditAPIClient.h; sourceTree = "<group>"; };
 		DC1D928315DAFBCB00B8F886 /* TransloaditAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransloaditAPIClient.m; path = ../../TransloaditSDK/TransloaditAPIClient.m; sourceTree = "<group>"; };
+		DC1D92A915DD627700B8F886 /* TransloaditAPIRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransloaditAPIRequest.h; sourceTree = "<group>"; };
+		DC1D92AA15DD627700B8F886 /* TransloaditAPIRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransloaditAPIRequest.m; sourceTree = "<group>"; };
 		DC70063811F1DE75005D6D1C /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		DC70065611F1DF59005D6D1C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		DCCDA78311F31BCA001602BB /* TransloaditRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TransloaditRequest.h; path = ../../TransloaditSDK/TransloaditRequest.h; sourceTree = "<group>"; };
@@ -147,6 +150,8 @@
 				DCCDA78411F31BCA001602BB /* TransloaditRequest.m */,
 				DC1D928215DAFBCB00B8F886 /* TransloaditAPIClient.h */,
 				DC1D928315DAFBCB00B8F886 /* TransloaditAPIClient.m */,
+				DC1D92A915DD627700B8F886 /* TransloaditAPIRequest.h */,
+				DC1D92AA15DD627700B8F886 /* TransloaditAPIRequest.m */,
 			);
 			name = TransloaditSDK;
 			path = Classes;
@@ -384,6 +389,7 @@
 				DC1D928015DAFAE900B8F886 /* AFXMLRequestOperation.m in Sources */,
 				DC1D928115DAFAE900B8F886 /* UIImageView+AFNetworking.m in Sources */,
 				DC1D928415DAFBCB00B8F886 /* TransloaditAPIClient.m in Sources */,
+				DC1D92AB15DD627700B8F886 /* TransloaditAPIRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

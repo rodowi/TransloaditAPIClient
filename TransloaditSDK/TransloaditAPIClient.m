@@ -23,8 +23,9 @@
 // THE SOFTWARE.
 
 #import "TransloaditAPIClient.h"
+#import "TransloaditAPIRequest.h"
+
 #import "AFJSONUtilities.h"
-#import <CommonCrypto/CommonHMAC.h>
 
 static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit.com";
 
@@ -143,53 +144,21 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
 
 #pragma mark - Network requests
 
-- (void)addExpirationParameterToDictionary:(NSMutableDictionary *)dictionary
-{
-    NSDateFormatter *format = [[NSDateFormatter alloc] init];
-    [format setDateFormat:@"yyyy-MM-dd HH:mm-ss 'GMT'"];
-    
-    NSDate *localExpires = [[NSDate alloc] initWithTimeIntervalSinceNow:60*60];
-    NSTimeInterval timeZoneOffset = [[NSTimeZone defaultTimeZone] secondsFromGMT];
-    NSTimeInterval gmtTimeInterval = [localExpires timeIntervalSinceReferenceDate] - timeZoneOffset;
-    NSDate *gmtExpires = [NSDate dateWithTimeIntervalSinceReferenceDate:gmtTimeInterval];
-    
-    [dictionary setObject:[format stringFromDate:gmtExpires] forKey:@"expires"];
-    
-    [localExpires release];
-    [format release];
-}
-
 - (void)uploadData:(NSData *)data namedAs:(NSString *)name ofContentType:(NSString *)type
 {
     if ([self allKeysAreSet] == NO) {
         NSLog(@"Awww snap! Some API keys are missing");
+        // TODO: call failure block passing a crafted NSError
     }
-    
-    // A timestamp in the (near) future, after which the signature will no longer be accepted
-    [self addExpirationParameterToDictionary:[params objectForKey:@"auth"]];
-    
-    // Authentication parameters should be JSON encoded
-    NSError *JSONEncodingError = nil;
-    NSData *JSONData = AFJSONEncode(params, &JSONEncodingError);
-    if (JSONEncodingError)
-        NSLog(@"Awww snap! JSON encoding error");
-    NSString *paramsField = [[[NSString alloc] initWithData:JSONData encoding:NSUTF8StringEncoding] autorelease];
-    
-    // Signature of the request
-    NSString *signatureField = [self stringWithHexBytes:[self hmacSha1withKey:_secret forString:paramsField]];
-        
-    // Extra wrapper to join both JSON encoded parameters and the signature
-    NSDictionary *postParameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    paramsField, @"params", 
-                                    signatureField, @"signature",
-                                    nil];
 
-    // Setup POST request
-    NSMutableURLRequest *request = [self multipartFormRequestWithMethod:@"POST" path:@"/assemblies?pretty=true" parameters:postParameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+    NSDictionary *parameters = [TransloaditAPIRequest encodeParameters:params appendingSignatureUsingSecret:_secret];
+
+    // Setup multipart form request
+    NSMutableURLRequest *request = [self multipartFormRequestWithMethod:@"POST" path:@"/assemblies?pretty=true" parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         [formData appendPartWithFileData:data name:@"upload_1" fileName:name mimeType:type];
     }];
-    
-    // Fire & notify listener
+
+    // Fire!
     AFHTTPRequestOperation *operation = [[[AFHTTPRequestOperation alloc] initWithRequest:request] autorelease];
     [operation setUploadProgressBlock:^(NSInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) { 
         if (_uploadProgressBlock) {
@@ -212,52 +181,15 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
             });
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) { 
+        // TODO: craft a well described NSError using responseString[error] and responseString[message]
         if (_failureBlock) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 _failureBlock(error);
             });
         }
     }];
+    
     [operation start];
-}
-
-#pragma mark - Utilities
-
-- (NSString *)stringWithHexBytes:(NSData *)data
-{
-    static const char hexdigits[] = "0123456789abcdef";
-    const size_t numBytes = [data length];
-    const unsigned char* bytes = [data bytes];
-    char *strbuf = (char *)malloc(numBytes * 2 + 1);
-    char *hex = strbuf;
-    NSString *hexBytes = nil;
-
-    for (int i = 0; i<numBytes; ++i) {
-        const unsigned char c = *bytes++;
-        *hex++ = hexdigits[(c >> 4) & 0xF];
-        *hex++ = hexdigits[(c ) & 0xF];
-    }
-    
-    *hex = 0;
-    hexBytes = [NSString stringWithUTF8String:strbuf];
-    free(strbuf);
-    
-    return hexBytes;
-}
-
-- (NSData *)hmacSha1withKey:(NSString *)key forString:(NSString *)string
-{
-	NSData *clearTextData = [string dataUsingEncoding:NSUTF8StringEncoding];
-	NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
-	
-	uint8_t digest[CC_SHA1_DIGEST_LENGTH] = {0};
-	
-	CCHmacContext hmacContext;
-	CCHmacInit(&hmacContext, kCCHmacAlgSHA1, keyData.bytes, keyData.length);
-	CCHmacUpdate(&hmacContext, clearTextData.bytes, clearTextData.length);
-	CCHmacFinal(&hmacContext, digest);
-	
-	return [NSData dataWithBytes:digest length:CC_SHA1_DIGEST_LENGTH];
 }
 
 @end
