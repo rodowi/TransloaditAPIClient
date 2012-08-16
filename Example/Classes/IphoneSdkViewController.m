@@ -223,20 +223,6 @@
 
 - (IBAction)buttonTouch
 {
-    /*
-	if (transload) 
-    {
-		[transload cancel];
-		[button setTitle:NSLocalizedString(@"Select File", @"") forState:UIControlStateNormal];
-		[transload release];
-		transload = nil;
-		progressBar.hidden = status.hidden = YES;
-		thumb.hidden = YES;
-		[spinner stopAnimating];
-		return;
-	}
-     */
-
 	thumb.hidden = YES;    
 
 	// Pops up the image picker showing all available images and videos

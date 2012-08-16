@@ -1,10 +1,7 @@
 #import <QuartzCore/CALayer.h>
-#import "TransloaditRequest.h"
 
 @interface IphoneSdkViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate> 
 {
-	TransloaditRequest *transload;
-	
 	IBOutlet UIButton *button;
 	IBOutlet UIImageView *thumb;
 	IBOutlet UIProgressView *progressBar;
