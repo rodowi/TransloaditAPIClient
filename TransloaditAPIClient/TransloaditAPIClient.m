@@ -72,13 +72,13 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
     [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
 
     // Accept HTTP Header; see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1
-	[self setDefaultHeader:@"Accept" value:@"application/json"];
+    [self setDefaultHeader:@"Accept" value:@"application/json"];
 
     // Body parameters should be url encoded; see https://transloadit.com/docs/authentication
     [self setParameterEncoding:AFFormURLParameterEncoding];
 
     params = [[NSMutableDictionary alloc] init];
-    
+
     return self;
 }
 
@@ -114,19 +114,19 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
     NSString *field = @"upload_1";
     NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
     
-	if ([mediaType isEqualToString:@"public.image"]) {
-		NSMutableDictionary *file = [[NSMutableDictionary alloc] init];
-		[file setObject:info forKey:@"info"];
-		[file setObject:field forKey:@"field"];        
+    if ([mediaType isEqualToString:@"public.image"]) {
+        NSMutableDictionary *file = [[NSMutableDictionary alloc] init];
+        [file setObject:info forKey:@"info"];
+        [file setObject:field forKey:@"field"];
         UIImage *image = [[file objectForKey:@"info"] objectForKey:@"UIImagePickerControllerOriginalImage"];
         NSData *imageData = UIImageJPEGRepresentation(image, 0.9f);
         [self uploadData:imageData namedAs:@"iphone_image.jpg" ofContentType:@"image/jpeg"];
         [file release];
-	} else if ([mediaType isEqualToString:@"public.movie"]) {
-		NSURL *fileUrl = [info valueForKey:UIImagePickerControllerMediaURL];
-		NSString *filePath = [fileUrl path];
+    } else if ([mediaType isEqualToString:@"public.movie"]) {
+        NSURL *fileUrl = [info valueForKey:UIImagePickerControllerMediaURL];
+        NSString *filePath = [fileUrl path];
         [self uploadFileAt:filePath namedAs:@"iphone_video.mov" ofContentType:@"video/quicktime"];
-	}
+    }
 }
 
 #pragma mark AFHTTPRequestOperation wrappers

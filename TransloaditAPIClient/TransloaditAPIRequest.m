@@ -80,33 +80,33 @@ NSString * stringWithHexBytes(NSData *data)
     char *strbuf = (char *)malloc(numBytes * 2 + 1);
     char *hex = strbuf;
     NSString *hexBytes = nil;
-    
+
     for (int i = 0; i<numBytes; ++i) {
         const unsigned char c = *bytes++;
         *hex++ = hexdigits[(c >> 4) & 0xF];
         *hex++ = hexdigits[(c ) & 0xF];
     }
-    
+
     *hex = 0;
     hexBytes = [NSString stringWithUTF8String:strbuf];
     free(strbuf);
-    
+
     return hexBytes;
 }
 
 NSData * hmacSha1withKey(NSString *key, NSString *string)
 {
-	NSData *clearTextData = [string dataUsingEncoding:NSUTF8StringEncoding];
-	NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
-	
-	uint8_t digest[CC_SHA1_DIGEST_LENGTH] = {0};
-	
-	CCHmacContext hmacContext;
-	CCHmacInit(&hmacContext, kCCHmacAlgSHA1, keyData.bytes, keyData.length);
-	CCHmacUpdate(&hmacContext, clearTextData.bytes, clearTextData.length);
-	CCHmacFinal(&hmacContext, digest);
-	
-	return [NSData dataWithBytes:digest length:CC_SHA1_DIGEST_LENGTH];
+    NSData *clearTextData = [string dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
+
+    uint8_t digest[CC_SHA1_DIGEST_LENGTH] = {0};
+
+    CCHmacContext hmacContext;
+    CCHmacInit(&hmacContext, kCCHmacAlgSHA1, keyData.bytes, keyData.length);
+    CCHmacUpdate(&hmacContext, clearTextData.bytes, clearTextData.length);
+    CCHmacFinal(&hmacContext, digest);
+
+    return [NSData dataWithBytes:digest length:CC_SHA1_DIGEST_LENGTH];
 }
 
 
