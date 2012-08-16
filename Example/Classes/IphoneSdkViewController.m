@@ -241,7 +241,7 @@
 {
     [[TransloaditAPIClient sharedClient] authenticateWithKey:@"<AUTH-KEY>" andSecret:@"<AUTH-SECRET>"];
     [[TransloaditAPIClient sharedClient] setTemplateId:@"<TEMPLATE-ID>"];
-    [[TransloaditAPIClient sharedClient] setRedirectUrl:@"<REDIRECT-URL>"];
+    [[TransloaditAPIClient sharedClient] setNotifyUrl:@"<REDIRECT-URL>"];
     NSDictionary *fields = [NSDictionary dictionaryWithObjectsAndKeys:@"my value", @"message", nil];
     [[TransloaditAPIClient sharedClient] setFields:fields];
 

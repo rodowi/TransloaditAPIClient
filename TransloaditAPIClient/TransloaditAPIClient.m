@@ -107,6 +107,11 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
     [params setObject:fields forKey:@"fields"];
 }
 
+- (void)setNotifyUrl:(NSString *)notifyUrl
+{
+    [params setObject:notifyUrl forKey:@"notify_url"];
+}
+
 - (BOOL)allKeysAreSet
 {
     NSMutableDictionary *auth = [params objectForKey:@"auth"];

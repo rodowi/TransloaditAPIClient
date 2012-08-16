@@ -39,6 +39,7 @@ typedef void (^TransloaditAPIClientFailureBlock)(NSError *);
 - (void)authenticateWithKey:(NSString *)key andSecret:(NSString *)secret;
 - (void)setTemplateId:(NSString *)identifier;
 - (void)setRedirectUrl:(NSString *)redirectUrl;
+- (void)setNotifyUrl:(NSString *)notifyUrl;
 - (void)setFields:(NSDictionary *)fields;
 - (BOOL)allKeysAreSet;
 - (void)uploadFileAt:(NSString *)path namedAs:(NSString *)name ofContentType:(NSString *)type;
