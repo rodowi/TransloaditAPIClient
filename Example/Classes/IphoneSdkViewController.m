@@ -70,6 +70,7 @@
     [[TransloaditAPIClient sharedClient] setCompletionBlockWithSuccess:^(NSDictionary *JSON) {
         [self requestFinished:JSON];
     } failure:^(NSError *error) {
+        [self notifyUserWithMessage:[error localizedDescription] title:@"Awww snap!"];
         NSLog(@"Awww snap! Failed with error '%@'", [error localizedDescription]);
     }];
 
@@ -80,17 +81,19 @@
 {
 	status.hidden = progressBar.hidden = YES;
 	[button setTitle:NSLocalizedString(@"Select File", @"") forState:UIControlStateNormal];
-    
-    NSString *responseStatus;
-    NSString *errorDescription = [response valueForKeyPath:@"error"];
-    if (errorDescription) {
-        responseStatus = errorDescription;
-    } else {
-        responseStatus = [response valueForKeyPath:@"ok"];
-    }
 
-    UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:responseStatus message:[response description] delegate:nil cancelButtonTitle:NSLocalizedString(@"Ok", @"") otherButtonTitles:nil] autorelease];
-	[alert show];
+    NSString *errorDescription = [response valueForKeyPath:@"error"];
+    NSString *responseStatus = errorDescription ? errorDescription : [response valueForKeyPath:@"ok"];
+    
+    [self notifyUserWithMessage:[response description] title:responseStatus];
+}
+
+- (void)notifyUserWithMessage:(NSString *)message title:(NSString *)title
+{
+    UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:title message:message delegate:nil 
+                                           cancelButtonTitle:NSLocalizedString(@"Ok", @"") otherButtonTitles:nil] autorelease];
+
+    [alert show];
 
     ((UILabel *)[[alert subviews] objectAtIndex:1]).textAlignment = UITextAlignmentLeft;
 }
