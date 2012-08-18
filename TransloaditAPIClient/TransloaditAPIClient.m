@@ -144,6 +144,12 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
     }
 }
 
+- (void)uploadImage:(UIImage *)image
+{
+    NSData *data = UIImageJPEGRepresentation(image, 0.9f);
+    [self uploadData:data namedAs:@"iphone_image.jpg" ofContentType:@"image/jpeg"];
+}
+
 #pragma mark AFHTTPRequestOperation wrappers
 
 - (void)setUploadProgressBlock:(TransloaditAPIClientProgressBlock)block 

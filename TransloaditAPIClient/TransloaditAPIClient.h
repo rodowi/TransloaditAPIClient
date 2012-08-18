@@ -44,6 +44,7 @@ typedef void (^TransloaditAPIClientFailureBlock)(NSError *);
 - (BOOL)allKeysAreSet;
 - (void)uploadFileAt:(NSString *)path namedAs:(NSString *)name ofContentType:(NSString *)type;
 - (void)uploadFileFromPicker:(NSDictionary *)info;
+- (void)uploadImage:(UIImage *)image;
 
 // AFHTTPRequestOperation wrappers
 - (void)setUploadProgressBlock:(void (^)(NSInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))block;
