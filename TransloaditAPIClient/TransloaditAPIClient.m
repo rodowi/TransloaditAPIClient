@@ -209,7 +209,12 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
             });
         }
     }];
-    
+    // Support background networking
+    [operation setShouldExecuteAsBackgroundTaskWithExpirationHandler:^{
+        NSLog(@"Awww snap! Couldn't upload on time. Apple's background timeout expired.");
+        // TODO: should notify the user, perhaps a UIAlertView
+    }];
+
     [operation start];
 }
 
