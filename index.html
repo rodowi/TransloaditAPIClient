@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>TransloadIt API Client by citivox</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>TransloadIt API Client</h1>
+        <p>A Transloadit API client powered by AFNetworking</p>
+
+        <p class="view"><a href="https://github.com/citivox/TransloaditAPIClient">View the Project on GitHub <small>citivox/TransloaditAPIClient</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/citivox/TransloaditAPIClient/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/citivox/TransloaditAPIClient/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/citivox/TransloaditAPIClient">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>A Transloadit API Wrapper for iOS</h1>
+
+<p>This is a refactored version of the <a href="https://github.com/transloadit/iphone-sdk">Transloadit iPhone
+SDK</a> powered by
+AFNetworking and blocks.</p>
+
+<h2>Getting started</h2>
+
+<p>To work with the API you will need a <a href="http://transloadit.com/">transloadit</a> account, as well
+as a <a href="http://transloadit.com/docs/templates">template id</a>.</p>
+
+<p>In order to use the SDK in your own app, simply add
+TransloaditAPIClient.[h|m] into your XCode project.</p>
+
+<p>TransloaditAPIClient depends on
+<a href="https://github.com/AFNetworking/AFNetworking/">AFNetworking</a></p>
+
+<h2>A gentle introduction to the TransloaditAPIClient</h2>
+
+<p><strong>Initializing</strong></p>
+
+<div class="highlight"><pre><span class="p">[[</span><span class="n">TransloaditAPIClient</span> <span class="n">sharedClient</span><span class="p">]</span> <span class="nl">authenticateWithKey:</span><span class="s">@"&lt;AUTH-KEY&gt;"</span> <span class="nl">andSecret:</span><span class="s">@"&lt;AUTH-SECRET&gt;"</span><span class="p">];</span>
+<span class="p">[[</span><span class="n">TransloaditAPIClient</span> <span class="n">sharedClient</span><span class="p">]</span> <span class="nl">setTemplateId:</span><span class="s">@"&lt;TEMPLATE-ID&gt;"</span><span class="p">];</span>
+</pre></div>
+
+<p><strong>Uploading a picture selected from the UIImagePickerController</strong></p>
+
+<div class="highlight"><pre><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">imagePickerController:</span><span class="p">(</span><span class="n">UIImagePickerController</span> <span class="o">*</span><span class="p">)</span><span class="nv">picker</span> <span class="nf">didFinishPickingMediaWithInfo:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">info</span>
+<span class="p">{</span>
+  <span class="p">[[</span><span class="n">TransloaditAPIClient</span> <span class="n">sharedClient</span><span class="p">]</span> <span class="nl">uploadFileFromPicker:</span><span class="n">info</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+
+<p><strong>Uploading progress</strong></p>
+
+<div class="highlight"><pre><span class="p">[[</span><span class="n">TransloaditAPIClient</span> <span class="n">sharedClient</span><span class="p">]</span> <span class="nl">setUploadProgressBlock:</span><span class="o">^</span><span class="p">(</span><span class="n">NSInteger</span> <span class="n">bytesWritten</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">totalBytesWritten</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">totalBytesExpectedToWrite</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Sent %lld of %lld bytes"</span><span class="p">,</span> <span class="n">totalBytesWritten</span><span class="p">,</span> <span class="n">totalBytesExpectedToWrite</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">totalBytesWritten</span> <span class="o">==</span> <span class="n">totalBytesExpectedToWrite</span><span class="p">)</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"We are done uploading!"</span><span class="p">);</span>
+<span class="p">}];</span>
+</pre></div>
+
+<p><strong>Handling success and failure</strong></p>
+
+<div class="highlight"><pre><span class="p">[[</span><span class="n">TransloaditAPIClient</span> <span class="n">sharedClient</span><span class="p">]</span> <span class="nl">setCompletionBlockWithSuccess:</span><span class="o">^</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="n">JSON</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Transloadit's response: </span><span class="se">\n</span><span class="s">%@"</span><span class="p">,</span> <span class="p">[</span><span class="n">JSON</span> <span class="n">description</span><span class="p">]);</span>
+<span class="p">}</span> <span class="nl">failure:</span><span class="o">^</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Awww snap! Failed with error '%@'"</span><span class="p">,</span> <span class="p">[</span><span class="n">error</span> <span class="n">localizedDescription</span><span class="p">]);</span>
+<span class="p">}];</span>
+</pre></div>
+
+<h2>License</h2>
+
+<p>(The MIT License)</p>
+
+<p>Copyright (c) 2012 Rodolfo Wilhelmy <a href="mailto:rwilhelmy@gmail.com">rwilhelmy@gmail.com</a>, CitiVox</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/citivox">citivox</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
