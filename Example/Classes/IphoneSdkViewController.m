@@ -240,14 +240,14 @@
 - (void) viewDidLoad
 {
     [[TransloaditAPIClient sharedClient] authenticateWithKey:@"<AUTH-KEY>" andSecret:@"<AUTH-SECRET>"];
-    [[TransloaditAPIClient sharedClient] setTemplateId:@"<TEMPLATE-ID>"];
-    [[TransloaditAPIClient sharedClient] setNotifyUrl:@"<REDIRECT-URL>"];
-    NSDictionary *fields = [NSDictionary dictionaryWithObjectsAndKeys:@"my value", @"message", nil];
-    [[TransloaditAPIClient sharedClient] setFields:fields];
+    TransloaditAPIRequest *request = [TransloaditAPIClient sharedClient].transloaditRequest;
+    request.templateId = @"";
+    request.notifyUrl = @"";
+    [[TransloaditAPIClient sharedClient] setTransloaditRequest:request];
 
 	[button setTitle:NSLocalizedString(@"Select File", @"") forState:UIControlStateNormal];
 
-    if ([[TransloaditAPIClient sharedClient] allKeysAreSet] == NO) {
+    if ([request hasAuthorizationKey] == NO) {
 		UIAlertView *errorAlertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Bad config", @"") message:NSLocalizedString(@"Missing Transloadit API credentials, don't forget to invoke authenticateWithKey:andSecret", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"Ok", @"") otherButtonTitles:nil] autorelease];
 		[errorAlertView show];
     }

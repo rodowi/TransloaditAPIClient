@@ -24,16 +24,34 @@
 
 #import "AFHTTPRequestOperation.h"
 
-@interface TransloaditAPIRequest : AFHTTPRequestOperation
+// TODO: handle public API requests
+
+@interface TransloaditAPIRequest : NSObject
+
+@property (nonatomic, retain) NSString *authKey;
+@property (nonatomic, retain) NSString *templateId;
+@property (nonatomic, retain) NSString *redirectUrl;
+@property (nonatomic, retain) NSString *notifyUrl;
+@property (nonatomic, retain) NSDictionary *fields;
+
+/**
+ * @name Look for authorization key
+ * A private API call must contain auth.key
+ *
+ * @see https://transloadit.com/docs/api-basics
+ */
+- (BOOL)hasAuthorizationKey;
 
 /**
  * @name Encoding parameters for Transloadit requests
- *
- * Two parameters must be passed on each request
- * 1. params: a JSON representation of the request parameters using simple URL encoding
- * 2. signature: a HMAC hex signature of JSON-encoded params using your API secret as the SHA1 key
+ * Two parameters must be passed on each request:
+ * 1. params: a JSON representation of the request parameters using simple URL encoding.
+ * 2. signature: a HMAC hex signature of JSON-encoded params using the API secret as SHA1 key.
+ * 
+ * @param secret: Your API auth secret generated for your account.
  * @see https://transloadit.com/docs/authentication
+ * @see https://transloadit.com/accounts/credentials
  */
-+ (NSDictionary *)encodeParameters:(NSDictionary *)params appendingSignatureUsingSecret:(NSString *)secret;
+- (NSDictionary *)encodedParamsAppendingSignatureUsingSecret:(NSString *)secret;
 
 @end

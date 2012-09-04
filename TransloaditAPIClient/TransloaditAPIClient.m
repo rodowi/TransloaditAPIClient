@@ -23,7 +23,6 @@
 // THE SOFTWARE.
 
 #import "TransloaditAPIClient.h"
-#import "TransloaditAPIRequest.h"
 
 #import "AFJSONUtilities.h"
 
@@ -37,7 +36,7 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
     TransloaditAPIClientSuccessBlock _successBlock;
 }
 
-@synthesize params;
+@synthesize transloaditRequest;
 
 - (void)dealloc
 {
@@ -46,14 +45,15 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
     [_failureBlock release];
     [_successBlock release];
 
-    [params release];
+    [transloaditRequest release];
 
     [super dealloc];
 }
 
 #pragma mark - Initialization
 
-+ (TransloaditAPIClient *)sharedClient {
++ (TransloaditAPIClient *)sharedClient 
+{
     static TransloaditAPIClient *_sharedClient = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -63,11 +63,11 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
     return _sharedClient;
 }
 
-- (id)initWithBaseURL:(NSURL *)url {
+- (id)initWithBaseURL:(NSURL *)url 
+{
     self = [super initWithBaseURL:url];
-    if (!self) {
+    if (!self)
         return nil;
-    }
 
     [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
 
@@ -77,7 +77,7 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
     // Body parameters should be url encoded; see https://transloadit.com/docs/authentication
     [self setParameterEncoding:AFFormURLParameterEncoding];
 
-    params = [[NSMutableDictionary alloc] init];
+    self.transloaditRequest = [[[TransloaditAPIRequest alloc] init] autorelease];
 
     return self;
 }
@@ -86,36 +86,8 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
 
 - (void)authenticateWithKey:(NSString *)key andSecret:(NSString *)secret
 {
-    NSMutableDictionary *auth = [[[NSMutableDictionary alloc] init] autorelease];
-    [auth setObject:key forKey:@"key"];
-    [params setObject:auth forKey:@"auth"];
+    transloaditRequest.authKey = key;
     _secret = [secret retain];
-}
-
-- (void)setTemplateId:(NSString *)identifier
-{
-    [params setObject:identifier forKey:@"template_id"];
-}
-
-- (void)setRedirectUrl:(NSString *)redirectUrl
-{
-    [params setObject:redirectUrl forKey:@"redirect_url"];
-}
-
-- (void)setFields:(NSDictionary *)fields
-{
-    [params setObject:fields forKey:@"fields"];
-}
-
-- (void)setNotifyUrl:(NSString *)notifyUrl
-{
-    [params setObject:notifyUrl forKey:@"notify_url"];
-}
-
-- (BOOL)allKeysAreSet
-{
-    NSMutableDictionary *auth = [params objectForKey:@"auth"];
-    return auth && [auth objectForKey:@"key"] && _secret;
 }
 
 - (void)uploadFileAt:(NSString *)path namedAs:(NSString *)name ofContentType:(NSString *)type
@@ -167,20 +139,27 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
 
 - (void)uploadData:(NSData *)data namedAs:(NSString *)name ofContentType:(NSString *)type
 {
-    if ([self allKeysAreSet] == NO) {
-        NSLog(@"Awww snap! Some API keys are missing");
+    if (transloaditRequest == nil) {
+        NSLog(@"Awww snap! Request is not initialized");
         // TODO: call failure block passing a crafted NSError
+        return;
     }
 
-    NSDictionary *parameters = [TransloaditAPIRequest encodeParameters:params appendingSignatureUsingSecret:_secret];
+    if (!transloaditRequest.authKey || !_secret) {
+        NSLog(@"Awww snap! Missing credentials");
+        // TODO: call failure block passing a crafted NSError
+        return;        
+    }
+
+    NSDictionary *params = [transloaditRequest encodedParamsAppendingSignatureUsingSecret:_secret];
 
     // Setup multipart form request
-    NSMutableURLRequest *request = [self multipartFormRequestWithMethod:@"POST" path:@"/assemblies?pretty=true" parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+    NSMutableURLRequest *urlRequest = [self multipartFormRequestWithMethod:@"POST" path:@"/assemblies?pretty=true" parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         [formData appendPartWithFileData:data name:@"upload_1" fileName:name mimeType:type];
     }];
 
     // Fire!
-    AFHTTPRequestOperation *operation = [[[AFHTTPRequestOperation alloc] initWithRequest:request] autorelease];
+    AFHTTPRequestOperation *operation = [[[AFHTTPRequestOperation alloc] initWithRequest:urlRequest] autorelease];
     [operation setUploadProgressBlock:^(NSInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) { 
         if (_uploadProgressBlock) {
             dispatch_async(dispatch_get_main_queue(), ^{

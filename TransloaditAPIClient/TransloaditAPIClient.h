@@ -25,6 +25,8 @@
 #import "AFHTTPClient.h"
 #import "AFJSONRequestOperation.h"
 
+#import "TransloaditAPIRequest.h"
+
 // Mimicking AFURLConnectionOperationProgressBlock @ AFURLConnectionOperation.m (not exposed)
 typedef void (^TransloaditAPIClientProgressBlock)(NSInteger, long long, long long);
 typedef void (^TransloaditAPIClientSuccessBlock)(NSDictionary *);
@@ -32,16 +34,12 @@ typedef void (^TransloaditAPIClientFailureBlock)(NSError *);
 
 @interface TransloaditAPIClient : AFHTTPClient
 
-@property (nonatomic, retain) NSMutableDictionary *params;
+@property (nonatomic, retain) TransloaditAPIRequest *transloaditRequest;
 
 + (TransloaditAPIClient *)sharedClient;
 
 - (void)authenticateWithKey:(NSString *)key andSecret:(NSString *)secret;
-- (void)setTemplateId:(NSString *)identifier;
-- (void)setRedirectUrl:(NSString *)redirectUrl;
-- (void)setNotifyUrl:(NSString *)notifyUrl;
-- (void)setFields:(NSDictionary *)fields;
-- (BOOL)allKeysAreSet;
+
 - (void)uploadFileAt:(NSString *)path namedAs:(NSString *)name ofContentType:(NSString *)type;
 - (void)uploadFileFromPicker:(NSDictionary *)info;
 - (void)uploadImage:(UIImage *)image;
