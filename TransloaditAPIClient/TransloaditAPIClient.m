@@ -167,7 +167,14 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
 {
     if ([self allKeysAreSet] == NO) {
         NSLog(@"Awww snap! Some API keys are missing");
-        // TODO: call failure block passing a crafted NSError
+        if (_failureBlock) {
+            NSString *domain = @"Missing API credentials";
+            NSString *message = @"Use authenticateWithKey:andSecret";
+            NSDictionary *detail = @{ NSLocalizedDescriptionKey: message };
+            NSError *error = [NSError errorWithDomain:domain code:100 userInfo:detail];
+            _failureBlock(error);
+        }
+        return;
     }
 
     NSDictionary *parameters = [TransloaditAPIRequest encodeParameters:params appendingSignatureUsingSecret:_secret];
