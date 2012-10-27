@@ -26,7 +26,7 @@
 #import "AFJSONRequestOperation.h"
 
 // Mimicking AFURLConnectionOperationProgressBlock @ AFURLConnectionOperation.m (not exposed)
-typedef void (^TransloaditAPIClientProgressBlock)(NSInteger, long long, long long);
+typedef void (^TransloaditAPIClientProgressBlock)(NSUInteger, long long, long long);
 typedef void (^TransloaditAPIClientSuccessBlock)(NSDictionary *);
 typedef void (^TransloaditAPIClientFailureBlock)(NSError *);
 
@@ -47,7 +47,7 @@ typedef void (^TransloaditAPIClientFailureBlock)(NSError *);
 - (void)uploadImage:(UIImage *)image;
 
 // AFHTTPRequestOperation wrappers
-- (void)setUploadProgressBlock:(void (^)(NSInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))block;
+- (void)setUploadProgressBlock:(void (^)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))block;
 - (void)setCompletionBlockWithSuccess:(void (^)(NSDictionary *JSON))success failure:(void (^)(NSError *error))failure;
 
 @end
