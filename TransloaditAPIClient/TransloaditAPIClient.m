@@ -167,7 +167,14 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
 {
     if ([self allKeysAreSet] == NO) {
         NSLog(@"Awww snap! Some API keys are missing");
-        // TODO: call failure block passing a crafted NSError
+        if (_failureBlock) {
+            NSString *domain = @"Missing API credentials";
+            NSString *message = @"Use authenticateWithKey:andSecret";
+            NSDictionary *detail = @{ NSLocalizedDescriptionKey: message };
+            NSError *error = [NSError errorWithDomain:domain code:100 userInfo:detail];
+            _failureBlock(error);
+        }
+        return;
     }
 
     NSDictionary *parameters = [TransloaditAPIRequest encodeParameters:params appendingSignatureUsingSecret:_secret];
@@ -199,8 +206,14 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
                 _successBlock(JSON);
             });
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) { 
-        // TODO: craft a well described NSError using responseString[error] and responseString[message]
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        // Parse server response to find a better error description
+        NSError *decodingError = nil;
+        NSDictionary *errorJSON = [NSJSONSerialization JSONObjectWithData:[operation.responseString dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:&decodingError];
+        if (!decodingError) {
+            NSDictionary *detail = @{ NSLocalizedDescriptionKey: errorJSON[@"message"] };
+            error = [NSError errorWithDomain:errorJSON[@"error"] code:100 userInfo:detail];
+        }
         if (_failureBlock) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 _failureBlock(error);
