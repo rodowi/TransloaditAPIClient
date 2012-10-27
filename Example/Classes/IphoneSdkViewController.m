@@ -58,7 +58,7 @@
 
 	status.text = NSLocalizedString(@"preparing upload", @"");	
 
-    [[TransloaditAPIClient sharedClient] setUploadProgressBlock:^(NSInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+    [[TransloaditAPIClient sharedClient] setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
         NSLog(@"Sent %lld of %lld bytes", totalBytesWritten, totalBytesExpectedToWrite);
         status.text = NSLocalizedString(@"uploading file", @"");
         [progressBar setProgress:(totalBytesWritten / totalBytesExpectedToWrite)];
