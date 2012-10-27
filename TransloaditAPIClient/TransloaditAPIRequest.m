@@ -29,7 +29,6 @@
  */
 
 #import "TransloaditAPIRequest.h"
-#import "AFJSONUtilities.h"
 #import <CommonCrypto/CommonHMAC.h>
 
 @implementation TransloaditAPIRequest
@@ -41,7 +40,7 @@
 
     // Parameters should be JSON encoded
     NSError *JSONEncodingError = nil;
-    NSData *JSONData = AFJSONEncode(params, &JSONEncodingError);
+    NSData *JSONData = [NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:&JSONEncodingError];
     if (JSONEncodingError) {
         NSLog(@"Awww snap! JSON encoding error");
         // TODO: pass a well crafted NSError

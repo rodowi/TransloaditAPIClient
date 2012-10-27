@@ -25,8 +25,6 @@
 #import "TransloaditAPIClient.h"
 #import "TransloaditAPIRequest.h"
 
-#import "AFJSONUtilities.h"
-
 static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit.com";
 
 @implementation TransloaditAPIClient
@@ -181,7 +179,7 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
 
     // Fire!
     AFHTTPRequestOperation *operation = [[[AFHTTPRequestOperation alloc] initWithRequest:request] autorelease];
-    [operation setUploadProgressBlock:^(NSInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) { 
+    [operation setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
         if (_uploadProgressBlock) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 _uploadProgressBlock(bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
@@ -192,7 +190,7 @@ static NSString * const kTransloaditAPIBaseURLString = @"http://api2.transloadit
         // We need to decode the response string since responseObject arrives as NSData
         // This happens apparently because we did not invoke AFJSONRequestOperation but AFHTTPRequestOperation 
         NSError *decodingError = nil;
-        NSDictionary *JSON = AFJSONDecode(responseObject, &decodingError);
+        NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableLeaves error:&decodingError];
         if (decodingError)
             NSLog(@"Awww snap! JSON decoding error");
 
