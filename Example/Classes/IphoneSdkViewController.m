@@ -70,7 +70,7 @@
     [[TransloaditAPIClient sharedClient] setCompletionBlockWithSuccess:^(NSDictionary *JSON) {
         [self requestFinished:JSON];
     } failure:^(NSError *error) {
-        [self notifyUserWithMessage:[error localizedDescription] title:@"Awww snap!"];
+        [self notifyUserWithMessage:[error localizedDescription] title:[error domain]];
         NSLog(@"Awww snap! Failed with error '%@'", [error localizedDescription]);
     }];
 
