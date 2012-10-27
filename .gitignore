@@ -23,3 +23,7 @@
 # Localized tmp files
 Localizable.strings.new
 Localizable.strings.old
+
+# Pods
+*/Pods/
+*/Podfile.lock
