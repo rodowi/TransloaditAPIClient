@@ -4,6 +4,8 @@ This is a refactored version of the [Transloadit iPhone
 SDK](https://github.com/transloadit/iphone-sdk) powered by
 AFNetworking and blocks.
 
+[![endorse](http://api.coderwall.com/wilhelmbot/endorsecount.png)](http://coderwall.com/wilhelmbot)
+
 ## Getting started
 
 To work with the API you will need a [transloadit](http://transloadit.com/) account, as well
@@ -55,16 +57,16 @@ TransloaditAPIClient depends on
 
 ## Authors
 
-1. Rod Wilhelmy from CitiVox: [@rod_wilhelmy](http://twitter.com/rod_wilhelmy),
-[wilhelmbot](https://github.com/wilhelmbot)
+1. [Rod Wilhelmy](http://coderwall.com/wilhelmbot) from Citivox
 2. Felix Geisendörfer from Transloadit
 
 ## License
 
 (The MIT License)
 
-Copyright (c) 2012 CitiVox, Inc.  
 Copyright (c) 2010-2012 Felix Geisendörfer (felix.geisendoerfer@transloadit.com)  
+Copyright (c) 2012 Citivox, Inc.  
+Copyright (c) 2012 Rod Wilhelmy (rod@citivox.com)  
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
