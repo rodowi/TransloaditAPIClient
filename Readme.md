@@ -17,6 +17,19 @@ TransloaditAPIClient.[h|m] into your XCode project.
 TransloaditAPIClient depends on
 [AFNetworking](https://github.com/AFNetworking/AFNetworking/)
 
+## Setup
+
+Installation is quite simple by using [Cocoapods](http://cocoapods.org/) for dependency management.
+
+A simple **Podfile** would be:
+
+```ruby
+platform :ios
+
+pod 'TransloaditAPIClient', :git => 'https://github.com/wilhelmbot/TransloaditAPIClient.git'
+```
+
+
 ## A gentle introduction to the TransloaditAPIClient
 
 **Initializing**
